@@ -1,5 +1,8 @@
 package com.gleb.controller.constrain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.gleb.model.User;
+
 import javax.validation.constraints.NotNull;
 
 public class UserDto {
@@ -8,11 +11,16 @@ public class UserDto {
     @NotNull
     private String email;
     @NotNull
+    @JsonIgnore
     private String password;
+    @JsonIgnore
     private String verifiedPassword;
     private String token;
     private String firstName;
     private String lastName;
+
+    public UserDto() {
+    }
 
     private UserDto(String email, String password, String verifiedPassword, String token, String firstName, String lastName) {
         this.email = email;
@@ -78,5 +86,15 @@ public class UserDto {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public static UserDto of(User user) {
+        UserDto userDto = new UserDto();
+        userDto.setEmail(user.getEmail());
+        userDto.setFirstName(user.getFirstName());
+        userDto.setLastName(user.getLastName());
+        userDto.setId(user.getId());
+        userDto.setToken(user.getToken());
+        return userDto;
     }
 }

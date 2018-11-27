@@ -27,6 +27,7 @@
     <spring:input path="verifiedPassword" type="password" id="verifyPassword" class="form-control" placeholder="Repeat Password"/>
 
     <spring:errors path="password" cssClass="error"/>
+    <spring:errors path="verifiedPassword" cssClass="error"/>
 
     <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
 </spring:form>

@@ -2,38 +2,66 @@ package com.gleb.model;
 
 import com.gleb.controller.constrain.model.RegisterUserDto;
 
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
+@Entity
+@Table(name = "USERS")
 public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotNull
+    @Column(name = "EMAIL")
     private String email;
-    @NotNull
-    private String password;
-    private String firstName;
-    private String lastName;
+    @Column(name = "TOKEN")
     private String token;
-
-    public User(Long id, String email, String password, String firstName, String lastName, String token) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.token = token;
-    }
+    @NotNull
+    @Column(name = "PASSWORD")
+    private String password;
+    @Column(name = "FIRST_NAME")
+    private String firstName;
+    @Column(name = "LAST_NAME")
+    private String lastName;
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "users")
+    private Set<Role> roles = new HashSet<>();
 
     public User() {
     }
 
-    public User(RegisterUserDto userDto) {
-
+    public User(Long id, String email, String token, String password, String firstName, String lastName) {
+        this.id = id;
+        this.email = email;
+        this.token = token;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public User(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public static User of(RegisterUserDto userDto) {
+        User user = new User();
+        user.setPassword(userDto.getPassword());
+        user.setEmail(userDto.getEmail());
+        user.setToken(userDto.getToken());
+        user.setFirstName(user.getFirstName());
+        user.setLastName(user.getLastName());
+        return user;
     }
 
     public Long getId() {
@@ -44,17 +72,20 @@ public class User {
         this.id = id;
     }
 
-    public User(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
-
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public String getPassword() {
@@ -79,21 +110,6 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public static User of(RegisterUserDto userDto) {
-        User user = new User();
-        user.setPassword(userDto.getPassword());
-        user.setEmail(userDto.getEmail());
-        user.setToken(userDto.getToken());
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
-
-        return user;
     }
 
 }
